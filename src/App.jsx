@@ -199,6 +199,7 @@ function App() {
     setCurrentFile(null)
     setFileMetadata(null)
     setFileType(null)
+    setError(null)
   }
 
   return (
@@ -230,7 +231,12 @@ function App() {
           style={{ display: 'none' }}
         />
         
-        {!currentFile ? (
+        {error ? (
+          <div className="error-message">
+            <p>{error}</p>
+            <button onClick={tryAnotherFile}>Try another file</button>
+          </div>
+        ) : !currentFile ? (
           <div className="drop-message">
             <svg className="upload-icon" viewBox="0 0 24 24" fill="currentColor">
               <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
@@ -240,14 +246,7 @@ function App() {
           </div>
         ) : (
           <div className="pdf-container">
-            {error ? (
-              <div className="error-message">
-                <p>{error}</p>
-                <button onClick={tryAnotherFile}>Try another file</button>
-              </div>
-            ) : (
-              <>
-                {fileType === 'pdf' && (
+            {fileType === 'pdf' && (
                   <div className="pdf-controls">
                     <button onClick={goToPrevPage} disabled={pageNumber <= 1}>
                       Previous
@@ -385,8 +384,6 @@ function App() {
                     </div>
                   )}
                 </div>
-              </>
-            )}
           </div>
         )}
       </div>

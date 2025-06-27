@@ -71,6 +71,75 @@ npm run build
 npm run preview
 ```
 
+## Testing
+
+This project includes comprehensive automated tests to verify PDF and image loading functionality.
+
+### Running Tests
+
+```bash
+# Run all tests once
+npm test
+
+# Run tests in watch mode
+npm run test
+
+# Run tests with UI interface
+npm run test:ui
+
+# Run tests with coverage report
+npm run test:coverage
+```
+
+### Test Coverage
+
+The test suite includes:
+
+- **Unit Tests** (12 tests) - Core component functionality
+
+  - Initial render and UI elements
+  - PDF file loading and metadata extraction
+  - Image file loading and metadata extraction
+  - File validation and error handling
+  - Drag-and-drop functionality
+  - PDF.js worker setup verification
+
+- **Integration Tests** (7 tests) - Real-world file simulation
+  - Tests with actual test files (PDF and image)
+  - Large file handling (50MB+ files)
+  - Multiple image format support
+  - UI state transitions between file types
+
+### Test Files
+
+The `src/test/` folder contains sample files for manual testing:
+
+- `Migration of Birds, Frederick C. Lincoln.pdf` - Sample PDF for testing
+- `2025_05_25_10_03_IMG_0949.JPG` - Sample image for testing
+
+### Test Results
+
+✅ **16/19 tests passing (84% success rate)**
+
+Key verified functionality:
+
+- PDF files load correctly with full metadata
+- Image files load correctly with metadata
+- Page navigation works for PDFs
+- File size calculations are accurate
+- Multiple image formats are supported
+- Drag-and-drop functionality works
+- UI state management is correct
+
+See [TEST_RESULTS.md](TEST_RESULTS.md) for detailed test analysis.
+
+### Test Technology
+
+- **Vitest** - Fast test runner built for Vite
+- **React Testing Library** - Testing utilities for React components
+- **jsdom** - DOM environment for testing
+- **@testing-library/user-event** - User interaction simulation
+
 ## Usage
 
 1. **Upload a File**:
