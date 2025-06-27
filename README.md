@@ -1,6 +1,6 @@
-# PDF.js Prototype
+# PDF & Image Viewer
 
-A modern React-based PDF viewer built with Vite, react-pdf, and PDF.js. Features drag-and-drop upload, PDF navigation, and a sleek dark theme.
+A modern React-based PDF and image viewer built with Vite, react-pdf, and PDF.js. Features drag-and-drop upload for both PDFs and images, PDF navigation, metadata display, and a sleek dark theme.
 
 ## Screenshots
 
@@ -14,9 +14,11 @@ A modern React-based PDF viewer built with Vite, react-pdf, and PDF.js. Features
 
 ## Features
 
-- 🎯 **Drag & Drop Upload** - Simply drag PDF files onto the interface
+- 🎯 **Drag & Drop Upload** - Simply drag PDF files or images onto the interface
 - 📄 **PDF Preview** - View PDF documents with high-quality rendering
-- 🔄 **Page Navigation** - Previous/Next buttons for multi-page documents
+- 🖼️ **Image Preview** - View images (JPEG, PNG, GIF, WebP, SVG) with responsive scaling
+- 🔄 **Page Navigation** - Previous/Next buttons for multi-page PDF documents
+- 📊 **Metadata Display** - Shows comprehensive file information for both PDFs and images
 - 🎨 **Dark Theme** - Modern dark color scheme with custom CSS variables
 - ⚡ **Fast Loading** - Vite-powered development with HMR
 - 🔧 **Local Worker** - PDF.js worker served locally (no CDN dependency)
@@ -67,15 +69,22 @@ npm run preview
 
 ## Usage
 
-1. **Upload a PDF**:
+1. **Upload a File**:
 
-   - Drag and drop a PDF file onto the upload area
+   - Drag and drop a PDF file or image onto the upload area
    - Or click the upload area to browse for files
+   - Supported formats: PDF, JPEG, PNG, GIF, WebP, SVG
 
-2. **Navigate the PDF**:
+2. **View PDFs**:
    - Use Previous/Next buttons to navigate pages
    - View page count in the controls
+   - See comprehensive PDF metadata (title, author, creation date, etc.)
    - Click "Close PDF" to return to upload interface
+
+3. **View Images**:
+   - Images are displayed with responsive scaling
+   - View image metadata (dimensions, file size, aspect ratio, etc.)
+   - Click "Close Image" to return to upload interface
 
 ## Project Structure
 

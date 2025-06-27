@@ -7,12 +7,13 @@ import 'react-pdf/dist/esm/Page/TextLayer.css'
 pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
 function App() {
-  const [pdfFile, setPdfFile] = useState(null)
+  const [currentFile, setCurrentFile] = useState(null)
   const [numPages, setNumPages] = useState(null)
   const [pageNumber, setPageNumber] = useState(1)
   const [isDragOver, setIsDragOver] = useState(false)
   const [error, setError] = useState(null)
-  const [pdfMetadata, setPdfMetadata] = useState(null)
+  const [fileMetadata, setFileMetadata] = useState(null)
+  const [fileType, setFileType] = useState(null) // 'pdf' or 'image'
 
   useEffect(() => {
     console.log('PDF.js version:', pdfjs.version)
@@ -55,14 +56,14 @@ function App() {
         keywords: info.Keywords || 'None',
         pages: pdf.numPages,
         pdfVersion: info.PDFFormatVersion || 'Unknown',
-        fileSize: pdfFile?.size ? `${(pdfFile.size / 1024 / 1024).toFixed(2)} MB` : 'Unknown'
+        fileSize: currentFile?.size ? `${(currentFile.size / 1024 / 1024).toFixed(2)} MB` : 'Unknown'
       }
       
-      setPdfMetadata(formattedMetadata)
+      setFileMetadata(formattedMetadata)
       console.log('PDF Metadata:', formattedMetadata)
     } catch (error) {
       console.error('Error extracting metadata:', error)
-      setPdfMetadata(null)
+      setFileMetadata(null)
     }
   }
 
@@ -89,14 +90,57 @@ function App() {
         type: file.type,
         size: file.size
       })
+      
       if (file.type === 'application/pdf') {
-        setPdfFile(file)
+        setCurrentFile(file)
+        setFileType('pdf')
         setError(null)
+      } else if (file.type.startsWith('image/')) {
+        setCurrentFile(file)
+        setFileType('image')
+        setError(null)
+        // Extract basic image metadata
+        extractImageMetadata(file)
       } else {
-        setError('Please drop a valid PDF file.')
+        setError('Please drop a valid PDF or image file.')
       }
     }
   }, [])
+
+  const extractImageMetadata = async (file) => {
+    try {
+      const img = new Image()
+      const url = URL.createObjectURL(file)
+      
+      img.onload = () => {
+        const metadata = {
+          fileName: file.name,
+          fileSize: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+          fileType: file.type,
+          dimensions: `${img.width} × ${img.height} pixels`,
+          width: img.width,
+          height: img.height,
+          aspectRatio: (img.width / img.height).toFixed(2),
+          lastModified: file.lastModified ? new Date(file.lastModified).toLocaleString() : 'Unknown'
+        }
+        
+        setFileMetadata(metadata)
+        console.log('Image Metadata:', metadata)
+        URL.revokeObjectURL(url)
+      }
+      
+      img.onerror = () => {
+        console.error('Error loading image for metadata extraction')
+        setFileMetadata(null)
+        URL.revokeObjectURL(url)
+      }
+      
+      img.src = url
+    } catch (error) {
+      console.error('Error extracting image metadata:', error)
+      setFileMetadata(null)
+    }
+  }
 
   const handleDragOver = useCallback((e) => {
     e.preventDefault()
@@ -110,16 +154,26 @@ function App() {
 
   const handleFileInput = (e) => {
     const file = e.target.files[0]
-    if (file && file.type === 'application/pdf') {
+    if (file) {
       console.log('Selected file:', {
         name: file.name,
         type: file.type,
         size: file.size
       })
-      setPdfFile(file)
-      setError(null)
-    } else {
-      setError('Please select a valid PDF file.')
+      
+      if (file.type === 'application/pdf') {
+        setCurrentFile(file)
+        setFileType('pdf')
+        setError(null)
+      } else if (file.type.startsWith('image/')) {
+        setCurrentFile(file)
+        setFileType('image')
+        setError(null)
+        // Extract basic image metadata
+        extractImageMetadata(file)
+      } else {
+        setError('Please select a valid PDF or image file.')
+      }
     }
   }
 
@@ -135,52 +189,54 @@ function App() {
 
   const closePdf = (e) => {
     e.stopPropagation()
-    setPdfFile(null)
-    setPdfMetadata(null)
+    setCurrentFile(null)
+    setFileMetadata(null)
+    setFileType(null)
   }
 
   const tryAnotherFile = (e) => {
     e.stopPropagation()
-    setPdfFile(null)
-    setPdfMetadata(null)
+    setCurrentFile(null)
+    setFileMetadata(null)
+    setFileType(null)
   }
 
   return (
     <div className="app">
-      <h1>PDF.js Prototype</h1>
-      <p>Drag and drop a PDF file or click to browse</p>
+      <h1>PDF & Image Viewer</h1>
+      <p>Drag and drop a PDF file or image, or click to browse</p>
       
       <div 
-        className={`drop-zone ${isDragOver ? 'drag-over' : ''} ${pdfFile ? 'pdf-loaded' : ''}`}
+        className={`drop-zone ${isDragOver ? 'drag-over' : ''} ${currentFile ? 'pdf-loaded' : ''}`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        onClick={() => !pdfFile && document.getElementById('file-input').click()}
+        onClick={() => !currentFile && document.getElementById('file-input').click()}
         onKeyDown={(e) => {
-          if (!pdfFile && (e.key === 'Enter' || e.key === ' ')) {
+          if (!currentFile && (e.key === 'Enter' || e.key === ' ')) {
             e.preventDefault();
             document.getElementById('file-input').click();
           }
         }}
         role="button"
-        tabIndex={pdfFile ? -1 : 0}
-        aria-label={pdfFile ? "PDF viewer" : "Drop PDF file here or click to browse"}
+        tabIndex={currentFile ? -1 : 0}
+        aria-label={currentFile ? "File viewer" : "Drop PDF or image file here or click to browse"}
       >
         <input
           id="file-input"
           type="file"
-          accept=".pdf"
+          accept=".pdf,image/*"
           onChange={handleFileInput}
           style={{ display: 'none' }}
         />
         
-        {!pdfFile ? (
+        {!currentFile ? (
           <div className="drop-message">
             <svg className="upload-icon" viewBox="0 0 24 24" fill="currentColor">
               <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
             </svg>
-            <p>Drop your PDF here or click to browse</p>
-            <p className="file-hint">Supports PDF files only</p>
+            <p>Drop your PDF or image here or click to browse</p>
+            <p className="file-hint">Supports PDF files and images (JPEG, PNG, GIF, WebP, SVG)</p>
           </div>
         ) : (
           <div className="pdf-container">
@@ -191,86 +247,143 @@ function App() {
               </div>
             ) : (
               <>
-                <div className="pdf-controls">
-                  <button onClick={goToPrevPage} disabled={pageNumber <= 1}>
-                    Previous
-                  </button>
-                  <span className="page-info">
-                    Page {pageNumber} of {numPages}
-                  </span>
-                  <button onClick={goToNextPage} disabled={pageNumber >= numPages}>
-                    Next
-                  </button>
-                  <button onClick={closePdf} className="close-btn">
-                    Close PDF
-                  </button>
-                </div>
+                {fileType === 'pdf' && (
+                  <div className="pdf-controls">
+                    <button onClick={goToPrevPage} disabled={pageNumber <= 1}>
+                      Previous
+                    </button>
+                    <span className="page-info">
+                      Page {pageNumber} of {numPages}
+                    </span>
+                    <button onClick={goToNextPage} disabled={pageNumber >= numPages}>
+                      Next
+                    </button>
+                    <button onClick={closePdf} className="close-btn">
+                      Close PDF
+                    </button>
+                  </div>
+                )}
+                
+                {fileType === 'image' && (
+                  <div className="pdf-controls">
+                    <button onClick={closePdf} className="close-btn">
+                      Close Image
+                    </button>
+                  </div>
+                )}
 
-                {pdfMetadata && (
+                {fileMetadata && (
                   <div className="pdf-metadata">
-                    <h3>Document Information</h3>
+                    <h3>{fileType === 'pdf' ? 'Document Information' : 'Image Information'}</h3>
                     <div className="metadata-grid">
-                      <div className="metadata-item">
-                        <span className="metadata-label">Title:</span>
-                        <span className="metadata-value">{pdfMetadata.title}</span>
-                      </div>
-                      <div className="metadata-item">
-                        <span className="metadata-label">Author:</span>
-                        <span className="metadata-value">{pdfMetadata.author}</span>
-                      </div>
-                      <div className="metadata-item">
-                        <span className="metadata-label">Subject:</span>
-                        <span className="metadata-value">{pdfMetadata.subject}</span>
-                      </div>
-                      <div className="metadata-item">
-                        <span className="metadata-label">Creator:</span>
-                        <span className="metadata-value">{pdfMetadata.creator}</span>
-                      </div>
-                      <div className="metadata-item">
-                        <span className="metadata-label">Producer:</span>
-                        <span className="metadata-value">{pdfMetadata.producer}</span>
-                      </div>
-                      <div className="metadata-item">
-                        <span className="metadata-label">Created:</span>
-                        <span className="metadata-value">{pdfMetadata.creationDate}</span>
-                      </div>
-                      <div className="metadata-item">
-                        <span className="metadata-label">Modified:</span>
-                        <span className="metadata-value">{pdfMetadata.modificationDate}</span>
-                      </div>
-                      <div className="metadata-item">
-                        <span className="metadata-label">Keywords:</span>
-                        <span className="metadata-value">{pdfMetadata.keywords}</span>
-                      </div>
-                      <div className="metadata-item">
-                        <span className="metadata-label">Pages:</span>
-                        <span className="metadata-value">{pdfMetadata.pages}</span>
-                      </div>
-                      <div className="metadata-item">
-                        <span className="metadata-label">PDF Version:</span>
-                        <span className="metadata-value">{pdfMetadata.pdfVersion}</span>
-                      </div>
-                      <div className="metadata-item">
-                        <span className="metadata-label">File Size:</span>
-                        <span className="metadata-value">{pdfMetadata.fileSize}</span>
-                      </div>
+                      {fileType === 'pdf' ? (
+                        <>
+                          <div className="metadata-item">
+                            <span className="metadata-label">Title:</span>
+                            <span className="metadata-value">{fileMetadata.title}</span>
+                          </div>
+                          <div className="metadata-item">
+                            <span className="metadata-label">Author:</span>
+                            <span className="metadata-value">{fileMetadata.author}</span>
+                          </div>
+                          <div className="metadata-item">
+                            <span className="metadata-label">Subject:</span>
+                            <span className="metadata-value">{fileMetadata.subject}</span>
+                          </div>
+                          <div className="metadata-item">
+                            <span className="metadata-label">Creator:</span>
+                            <span className="metadata-value">{fileMetadata.creator}</span>
+                          </div>
+                          <div className="metadata-item">
+                            <span className="metadata-label">Producer:</span>
+                            <span className="metadata-value">{fileMetadata.producer}</span>
+                          </div>
+                          <div className="metadata-item">
+                            <span className="metadata-label">Created:</span>
+                            <span className="metadata-value">{fileMetadata.creationDate}</span>
+                          </div>
+                          <div className="metadata-item">
+                            <span className="metadata-label">Modified:</span>
+                            <span className="metadata-value">{fileMetadata.modificationDate}</span>
+                          </div>
+                          <div className="metadata-item">
+                            <span className="metadata-label">Keywords:</span>
+                            <span className="metadata-value">{fileMetadata.keywords}</span>
+                          </div>
+                          <div className="metadata-item">
+                            <span className="metadata-label">Pages:</span>
+                            <span className="metadata-value">{fileMetadata.pages}</span>
+                          </div>
+                          <div className="metadata-item">
+                            <span className="metadata-label">PDF Version:</span>
+                            <span className="metadata-value">{fileMetadata.pdfVersion}</span>
+                          </div>
+                          <div className="metadata-item">
+                            <span className="metadata-label">File Size:</span>
+                            <span className="metadata-value">{fileMetadata.fileSize}</span>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="metadata-item">
+                            <span className="metadata-label">File Name:</span>
+                            <span className="metadata-value">{fileMetadata.fileName}</span>
+                          </div>
+                          <div className="metadata-item">
+                            <span className="metadata-label">File Type:</span>
+                            <span className="metadata-value">{fileMetadata.fileType}</span>
+                          </div>
+                          <div className="metadata-item">
+                            <span className="metadata-label">Dimensions:</span>
+                            <span className="metadata-value">{fileMetadata.dimensions}</span>
+                          </div>
+                          <div className="metadata-item">
+                            <span className="metadata-label">Aspect Ratio:</span>
+                            <span className="metadata-value">{fileMetadata.aspectRatio}:1</span>
+                          </div>
+                          <div className="metadata-item">
+                            <span className="metadata-label">File Size:</span>
+                            <span className="metadata-value">{fileMetadata.fileSize}</span>
+                          </div>
+                          <div className="metadata-item">
+                            <span className="metadata-label">Last Modified:</span>
+                            <span className="metadata-value">{fileMetadata.lastModified}</span>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                 )}
                 
                 <div className="pdf-viewer">
-                  <Document
-                    file={pdfFile}
-                    onLoadSuccess={onDocumentLoadSuccess}
-                    onLoadError={onDocumentLoadError}
-                    loading={<div className="loading">Loading PDF...</div>}
-                  >
-                    <Page 
-                      pageNumber={pageNumber}
-                      width={Math.min(800, window.innerWidth - 40)}
-                      loading={<div className="loading">Loading page...</div>}
-                    />
-                  </Document>
+                  {fileType === 'pdf' ? (
+                    <Document
+                      file={currentFile}
+                      onLoadSuccess={onDocumentLoadSuccess}
+                      onLoadError={onDocumentLoadError}
+                      loading={<div className="loading">Loading PDF...</div>}
+                    >
+                      <Page 
+                        pageNumber={pageNumber}
+                        width={Math.min(800, window.innerWidth - 40)}
+                        loading={<div className="loading">Loading page...</div>}
+                      />
+                    </Document>
+                  ) : (
+                    <div className="image-viewer">
+                      <img 
+                        src={URL.createObjectURL(currentFile)} 
+                        alt="Preview" 
+                        style={{
+                          maxWidth: '100%',
+                          maxHeight: '600px',
+                          objectFit: 'contain',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 20px rgba(48, 76, 137, 0.4)'
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
               </>
             )}
