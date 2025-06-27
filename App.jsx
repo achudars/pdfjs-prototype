@@ -1,13 +1,10 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
-import 'react-pdf/dist/Page/AnnotationLayer.css'
-import 'react-pdf/dist/Page/TextLayer.css'
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css'
+import 'react-pdf/dist/esm/Page/TextLayer.css'
 
-// Set up the worker for react-pdf
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url,
-).toString();
+// Set up the worker for react-pdf v9.x with local worker file
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
 function App() {
   const [pdfFile, setPdfFile] = useState(null)
@@ -16,7 +13,26 @@ function App() {
   const [isDragOver, setIsDragOver] = useState(false)
   const [error, setError] = useState(null)
 
+  useEffect(() => {
+    console.log('PDF.js version:', pdfjs.version)
+    console.log('Worker source:', pdfjs.GlobalWorkerOptions.workerSrc)
+    
+    // Test if worker is accessible
+    fetch('/pdf.worker.min.mjs', { method: 'HEAD' })
+      .then(response => {
+        if (response.ok) {
+          console.log('✅ PDF worker file is accessible')
+        } else {
+          console.warn('⚠️ PDF worker file not accessible:', response.status)
+        }
+      })
+      .catch(err => {
+        console.error('❌ Error checking PDF worker:', err)
+      })
+  }, [])
+
   const onDocumentLoadSuccess = ({ numPages }) => {
+    console.log('PDF loaded successfully with', numPages, 'pages')
     setNumPages(numPages)
     setPageNumber(1)
     setError(null)
@@ -24,7 +40,13 @@ function App() {
 
   const onDocumentLoadError = (error) => {
     console.error('Error loading PDF:', error)
-    setError('Failed to load PDF. Please make sure the file is a valid PDF.')
+    console.error('Error details:', {
+      name: error?.name,
+      message: error?.message,
+      stack: error?.stack
+    })
+    console.error('Worker src:', pdfjs.GlobalWorkerOptions.workerSrc)
+    setError(`Failed to load PDF: ${error?.message || 'Unknown error'}. Please make sure the file is a valid PDF.`)
   }
 
   const handleDrop = useCallback((e) => {
@@ -34,6 +56,11 @@ function App() {
     const files = e.dataTransfer.files
     if (files.length > 0) {
       const file = files[0]
+      console.log('Dropped file:', {
+        name: file.name,
+        type: file.type,
+        size: file.size
+      })
       if (file.type === 'application/pdf') {
         setPdfFile(file)
         setError(null)
@@ -56,6 +83,11 @@ function App() {
   const handleFileInput = (e) => {
     const file = e.target.files[0]
     if (file && file.type === 'application/pdf') {
+      console.log('Selected file:', {
+        name: file.name,
+        type: file.type,
+        size: file.size
+      })
       setPdfFile(file)
       setError(null)
     } else {

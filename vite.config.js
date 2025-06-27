@@ -5,11 +5,11 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    include: ["react-pdf"],
+    include: ["react-pdf", "pdfjs-dist"],
   },
-  build: {
-    commonjsOptions: {
-      include: [/react-pdf/, /node_modules/],
+  server: {
+    fs: {
+      allow: [".."],
     },
   },
 });
