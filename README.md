@@ -76,6 +76,7 @@ npm run preview
    - Supported formats: PDF, JPEG, PNG, GIF, WebP, SVG
 
 2. **View PDFs**:
+
    - Use Previous/Next buttons to navigate pages
    - View page count in the controls
    - See comprehensive PDF metadata (title, author, creation date, etc.)
