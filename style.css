@@ -1,3 +1,13 @@
+/* Prevent FOUC and ensure smooth loading */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  /* Prevent any layout shift during loading */
+  overflow-x: hidden;
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -11,6 +21,9 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  /* Ensure consistent transitions */
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 a {
@@ -28,6 +41,11 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  /* Ensure body maintains the same background as :root */
+  background-color: inherit;
+  color: inherit;
+  /* Smooth transition when content loads */
+  transition: all 0.2s ease;
 }
 
 #app {
@@ -36,10 +54,19 @@ body {
   padding: 2rem;
   text-align: center;
   width: 100%;
+  /* Ensure smooth content replacement */
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .app {
   width: 100%;
+  /* Reset the centering from #app when actual content loads */
+  display: block;
+  text-align: center;
+  min-height: 0;
 }
 
 h1 {
