@@ -9,14 +9,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-pdf": "^7.6.0"
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-pdf": "10.0.1"
   },
   "devDependencies": {
-    "vite": "^5.0.0",
-    "@vitejs/plugin-react": "^4.2.0",
-    "@types/react": "^18.2.43",
-    "@types/react-dom": "^18.2.17"
+    "vite": "7.0.0",
+    "@vitejs/plugin-react": "4.6.0",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6"
   }
 }
