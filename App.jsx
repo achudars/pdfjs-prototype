@@ -12,6 +12,7 @@ function App() {
   const [pageNumber, setPageNumber] = useState(1)
   const [isDragOver, setIsDragOver] = useState(false)
   const [error, setError] = useState(null)
+  const [pdfMetadata, setPdfMetadata] = useState(null)
 
   useEffect(() => {
     console.log('PDF.js version:', pdfjs.version)
@@ -31,11 +32,38 @@ function App() {
       })
   }, [])
 
-  const onDocumentLoadSuccess = ({ numPages }) => {
-    console.log('PDF loaded successfully with', numPages, 'pages')
-    setNumPages(numPages)
+  const onDocumentLoadSuccess = async (pdf) => {
+    console.log('PDF loaded successfully with', pdf.numPages, 'pages')
+    setNumPages(pdf.numPages)
     setPageNumber(1)
     setError(null)
+    
+    // Extract PDF metadata
+    try {
+      const metadata = await pdf.getMetadata()
+      const info = metadata.info || {}
+      
+      // Format metadata for display
+      const formattedMetadata = {
+        title: info.Title || 'Not specified',
+        author: info.Author || 'Not specified',
+        subject: info.Subject || 'Not specified',
+        creator: info.Creator || 'Not specified',
+        producer: info.Producer || 'Not specified',
+        creationDate: info.CreationDate ? new Date(info.CreationDate).toLocaleString() : 'Not specified',
+        modificationDate: info.ModDate ? new Date(info.ModDate).toLocaleString() : 'Not specified',
+        keywords: info.Keywords || 'None',
+        pages: pdf.numPages,
+        pdfVersion: info.PDFFormatVersion || 'Unknown',
+        fileSize: pdfFile?.size ? `${(pdfFile.size / 1024 / 1024).toFixed(2)} MB` : 'Unknown'
+      }
+      
+      setPdfMetadata(formattedMetadata)
+      console.log('PDF Metadata:', formattedMetadata)
+    } catch (error) {
+      console.error('Error extracting metadata:', error)
+      setPdfMetadata(null)
+    }
   }
 
   const onDocumentLoadError = (error) => {
@@ -108,11 +136,13 @@ function App() {
   const closePdf = (e) => {
     e.stopPropagation()
     setPdfFile(null)
+    setPdfMetadata(null)
   }
 
   const tryAnotherFile = (e) => {
     e.stopPropagation()
     setPdfFile(null)
+    setPdfMetadata(null)
   }
 
   return (
@@ -175,6 +205,58 @@ function App() {
                     Close PDF
                   </button>
                 </div>
+
+                {pdfMetadata && (
+                  <div className="pdf-metadata">
+                    <h3>Document Information</h3>
+                    <div className="metadata-grid">
+                      <div className="metadata-item">
+                        <span className="metadata-label">Title:</span>
+                        <span className="metadata-value">{pdfMetadata.title}</span>
+                      </div>
+                      <div className="metadata-item">
+                        <span className="metadata-label">Author:</span>
+                        <span className="metadata-value">{pdfMetadata.author}</span>
+                      </div>
+                      <div className="metadata-item">
+                        <span className="metadata-label">Subject:</span>
+                        <span className="metadata-value">{pdfMetadata.subject}</span>
+                      </div>
+                      <div className="metadata-item">
+                        <span className="metadata-label">Creator:</span>
+                        <span className="metadata-value">{pdfMetadata.creator}</span>
+                      </div>
+                      <div className="metadata-item">
+                        <span className="metadata-label">Producer:</span>
+                        <span className="metadata-value">{pdfMetadata.producer}</span>
+                      </div>
+                      <div className="metadata-item">
+                        <span className="metadata-label">Created:</span>
+                        <span className="metadata-value">{pdfMetadata.creationDate}</span>
+                      </div>
+                      <div className="metadata-item">
+                        <span className="metadata-label">Modified:</span>
+                        <span className="metadata-value">{pdfMetadata.modificationDate}</span>
+                      </div>
+                      <div className="metadata-item">
+                        <span className="metadata-label">Keywords:</span>
+                        <span className="metadata-value">{pdfMetadata.keywords}</span>
+                      </div>
+                      <div className="metadata-item">
+                        <span className="metadata-label">Pages:</span>
+                        <span className="metadata-value">{pdfMetadata.pages}</span>
+                      </div>
+                      <div className="metadata-item">
+                        <span className="metadata-label">PDF Version:</span>
+                        <span className="metadata-value">{pdfMetadata.pdfVersion}</span>
+                      </div>
+                      <div className="metadata-item">
+                        <span className="metadata-label">File Size:</span>
+                        <span className="metadata-value">{pdfMetadata.fileSize}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 
                 <div className="pdf-viewer">
                   <Document
