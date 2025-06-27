@@ -79,8 +79,10 @@ npm run preview
 
 ```
 ├── public/
-│   ├── pdf.worker.min.mjs    # PDF.js worker (local copy)
-│   └── vite.svg
+│   ├── favicon.svg           # Blue square favicon (main)
+│   ├── favicon-16x16.svg     # 16x16 favicon variant
+│   ├── favicon-32x32.svg     # 32x32 favicon variant
+│   └── pdf.worker.min.mjs    # PDF.js worker (local copy)
 ├── src/
 │   ├── App.jsx               # Main application component
 │   ├── main.jsx              # React entry point
