@@ -203,6 +203,32 @@ Manually copy the worker file:
 npx copyfiles -f node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/
 ```
 
+## Recent Updates (v0.1.0)
+
+### Successfully Upgraded Dependencies ✅
+
+- **React**: 18.2.0 → 18.3.1 (latest React 18)
+- **React-DOM**: 18.2.0 → 18.3.1 (latest React 18)
+- **react-pdf**: 9.1.0 → 9.2.1 (latest compatible with pdfjs-dist 4.8.69)
+- **@types/react**: 18.2.66 → 18.3.23 (latest for React 18)
+- **@types/react-dom**: 18.2.22 → 18.3.7 (latest for React 18)
+- **@vitejs/plugin-react**: 4.2.1 → 4.6.0 (latest 4.x)
+- **Vite**: 5.2.0 → 5.4.19 (latest Vite 5.x)
+
+### Intentionally NOT Upgraded ⚠️
+
+- **React 19+**: Breaking changes, would require thorough testing
+- **Vite 6+/7+**: Breaking changes, esbuild vulnerabilities require major updates
+- **react-pdf 10+**: Uses pdfjs-dist 5.3.31, would break worker compatibility
+- **pdfjs-dist 5+**: Would break existing worker setup and version matching
+
+### Security Notes
+
+- 2 moderate vulnerabilities remain in esbuild (via Vite)
+- Fixing requires Vite 7+ upgrade (breaking change)
+- Development-only vulnerabilities, production builds are secure
+- Consider upgrading Vite in future major version update
+
 ## Contributing
 
 1. Fork the repository
