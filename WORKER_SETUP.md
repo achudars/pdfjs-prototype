@@ -2,6 +2,18 @@
 
 This project uses a local copy of the PDF.js worker instead of a CDN to avoid CORS issues and ensure reliable PDF loading.
 
+## ⚠️ Critical Warning: Dependency Upgrades
+
+**DO NOT upgrade major dependencies without careful testing!**
+
+Upgrading React, Vite, react-pdf, or pdfjs-dist can break PDF functionality because:
+
+- Version compatibility between react-pdf and pdfjs-dist is strict
+- Worker API changes between PDF.js versions
+- Build tool changes can affect worker file processing
+
+Always test PDF upload/viewing after any dependency changes.
+
 ## How it works
 
 1. The PDF.js worker file is copied from `node_modules/pdfjs-dist/build/pdf.worker.min.mjs` to `public/pdf.worker.min.mjs`

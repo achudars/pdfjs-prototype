@@ -53,6 +53,8 @@ npm run dev
 
 The app will be available at `http://localhost:5173` (or next available port).
 
+> **⚠️ Note**: Avoid upgrading major dependencies (React, Vite, react-pdf) without testing PDF functionality. See the "Important: Dependency Upgrades" section below for details.
+
 ### Building for Production
 
 ```bash
@@ -125,6 +127,41 @@ Custom CSS variables in `style.css`:
 - Firefox 78+
 - Safari 14+
 - Edge 88+
+
+## ⚠️ Important: Dependency Upgrades
+
+**Warning**: Upgrading major dependencies can break the PDF.js worker functionality.
+
+### What Can Break
+
+- **React version upgrades** (e.g., React 18 → 19)
+- **Vite version upgrades** (e.g., Vite 5 → 6+)
+- **pdfjs-dist upgrades** (automatic or manual)
+- **react-pdf upgrades** (may pull different pdfjs-dist versions)
+
+### Why It Breaks
+
+1. **Version mismatches**: react-pdf and pdfjs-dist must use compatible versions
+2. **Worker API changes**: PDF.js worker API can change between versions
+3. **Build tool changes**: Vite updates may affect how worker files are processed
+4. **Import path changes**: Worker file locations may change between versions
+
+### Before Upgrading
+
+1. **Check compatibility**: Verify react-pdf supports your target React/Vite version
+2. **Review changelogs**: Check for breaking changes in PDF.js or react-pdf
+3. **Test thoroughly**: Always test PDF upload/viewing after upgrades
+4. **Backup working state**: Commit or backup before major upgrades
+
+### If PDF Worker Breaks After Upgrade
+
+1. Check console for worker-related errors
+2. Verify worker file exists: `public/pdf.worker.min.mjs`
+3. Ensure versions match: `npm list react-pdf pdfjs-dist`
+4. Reinstall with correct versions: `npm install`
+5. Consider reverting the upgrade if issues persist
+
+See [WORKER_SETUP.md](WORKER_SETUP.md) for detailed worker configuration.
 
 ## Troubleshooting
 
