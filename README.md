@@ -24,7 +24,7 @@ A modern React-based PDF viewer built with Vite, react-pdf, and PDF.js. Features
 
 ## Tech Stack
 
-- **React 19** - UI framework
+- **React 18** - UI framework
 - **Vite 5** - Build tool and dev server
 - **react-pdf 9** - PDF rendering component
 - **PDF.js 4.8.69** - PDF processing library
