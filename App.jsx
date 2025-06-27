@@ -95,12 +95,24 @@ function App() {
     }
   }
 
-  const goToPrevPage = () => {
+  const goToPrevPage = (e) => {
+    e.stopPropagation()
     setPageNumber(prev => Math.max(prev - 1, 1))
   }
 
-  const goToNextPage = () => {
+  const goToNextPage = (e) => {
+    e.stopPropagation()
     setPageNumber(prev => Math.min(prev + 1, numPages))
+  }
+
+  const closePdf = (e) => {
+    e.stopPropagation()
+    setPdfFile(null)
+  }
+
+  const tryAnotherFile = (e) => {
+    e.stopPropagation()
+    setPdfFile(null)
   }
 
   return (
@@ -145,7 +157,7 @@ function App() {
             {error ? (
               <div className="error-message">
                 <p>{error}</p>
-                <button onClick={() => setPdfFile(null)}>Try another file</button>
+                <button onClick={tryAnotherFile}>Try another file</button>
               </div>
             ) : (
               <>
@@ -159,7 +171,7 @@ function App() {
                   <button onClick={goToNextPage} disabled={pageNumber >= numPages}>
                     Next
                   </button>
-                  <button onClick={() => setPdfFile(null)} className="close-btn">
+                  <button onClick={closePdf} className="close-btn">
                     Close PDF
                   </button>
                 </div>
