@@ -6,11 +6,11 @@ A modern React-based PDF viewer built with Vite, react-pdf, and PDF.js. Features
 
 ### File Upload Interface
 
-[![Upload Interface](p1.jpeg)](p1.jpeg)
+![p1.jpeg](p1.jpeg)
 
 ### PDF Viewer with Navigation
 
-[![PDF Viewer](p2.jpeg)](p2.jpeg)
+![p2.jpeg](p2.jpeg)
 
 ## Features
 
