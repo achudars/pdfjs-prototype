@@ -9,13 +9,30 @@ html {
 }
 
 :root {
+  /* Custom color palette */
+  --color-primary: #304C89;
+  --color-secondary: #648de5;
+  --color-tertiary: #9eb7e5;
+  --color-light: #e8e5da;
+  --color-accent: #cdc392;
+  
+  /* Theme variables - darker preference */
+  --bg-primary: var(--color-primary);
+  --bg-secondary: var(--color-secondary);
+  --text-primary: var(--color-light);
+  --text-secondary: var(--color-tertiary);
+  --text-muted: var(--color-accent);
+  --border-color: var(--color-secondary);
+  --hover-color: var(--color-tertiary);
+  --accent-color: var(--color-accent);
+
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: dark;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -28,11 +45,11 @@ html {
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--color-secondary);
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: var(--hover-color);
 }
 
 body {
@@ -78,13 +95,13 @@ h1 {
 .drop-zone {
   margin-top: 2rem;
   padding: 2rem;
-  border: 2px dashed #646cff;
+  border: 2px dashed var(--border-color);
   border-radius: 12px;
   min-height: 400px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(100, 141, 229, 0.1);
   transition: all 0.3s ease;
   cursor: pointer;
   position: relative;
@@ -92,15 +109,15 @@ h1 {
 
 .drop-zone:hover,
 .drop-zone.drag-over {
-  border-color: #535bf2;
-  background-color: rgba(83, 91, 242, 0.1);
+  border-color: var(--hover-color);
+  background-color: rgba(158, 183, 229, 0.15);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(83, 91, 242, 0.2);
+  box-shadow: 0 8px 25px rgba(158, 183, 229, 0.3);
 }
 
 .drop-message {
   text-align: center;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
 }
 
 .upload-icon {
@@ -130,8 +147,8 @@ h1 {
 }
 
 .pdf-controls button {
-  background: #646cff;
-  color: white;
+  background: var(--color-secondary);
+  color: var(--text-primary);
   border: none;
   padding: 0.6rem 1.2rem;
   border-radius: 6px;
@@ -141,27 +158,27 @@ h1 {
 }
 
 .pdf-controls button:hover:not(:disabled) {
-  background: #535bf2;
+  background: var(--hover-color);
   transform: translateY(-1px);
 }
 
 .pdf-controls button:disabled {
-  background: #666;
+  background: var(--color-primary);
   cursor: not-allowed;
   opacity: 0.6;
 }
 
 .close-btn {
-  background: #f56565 !important;
+  background: var(--color-primary) !important;
 }
 
 .close-btn:hover {
-  background: #e53e3e !important;
+  background: var(--color-secondary) !important;
 }
 
 .page-info {
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
   min-width: 120px;
 }
 
@@ -176,19 +193,19 @@ h1 {
   justify-content: center;
   align-items: center;
   height: 200px;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
   font-size: 1.1em;
 }
 
 .error-message {
   text-align: center;
-  color: #f56565;
+  color: var(--accent-color);
   padding: 2rem;
 }
 
 .error-message button {
-  background: #646cff;
-  color: white;
+  background: var(--color-secondary);
+  color: var(--text-primary);
   border: none;
   padding: 0.6rem 1.2rem;
   border-radius: 6px;
@@ -197,13 +214,13 @@ h1 {
 }
 
 .error-message button:hover {
-  background: #535bf2;
+  background: var(--hover-color);
 }
 
 /* React PDF specific styles */
 .react-pdf__Page {
   margin: 0 auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(48, 76, 137, 0.4);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -213,36 +230,41 @@ h1 {
   height: auto !important;
 }
 
-/* Light mode adjustments */
+/* Light mode adjustments - still prefer darker theme */
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    /* Keep darker theme even in light mode preference */
+    --bg-primary: var(--color-primary);
+    --bg-secondary: var(--color-secondary);
+    --text-primary: var(--color-light);
+    --text-secondary: var(--color-tertiary);
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
   }
   
   .drop-zone {
-    background-color: rgba(0, 0, 0, 0.02);
+    background-color: rgba(100, 141, 229, 0.1);
   }
   
   .drop-zone:hover,
   .drop-zone.drag-over {
-    background-color: rgba(100, 108, 255, 0.1);
+    background-color: rgba(158, 183, 229, 0.15);
   }
   
   .drop-message {
-    color: rgba(0, 0, 0, 0.7);
+    color: var(--text-secondary);
   }
   
   .page-info {
-    color: rgba(0, 0, 0, 0.8);
+    color: var(--text-primary);
   }
   
   .loading {
-    color: rgba(0, 0, 0, 0.7);
+    color: var(--text-secondary);
   }
   
   .react-pdf__Page {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(48, 76, 137, 0.4);
   }
 }
 
