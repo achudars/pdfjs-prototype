@@ -115,6 +115,26 @@ h1 {
   box-shadow: 0 8px 25px rgba(158, 183, 229, 0.3);
 }
 
+/* Disable hover effects when PDF is loaded */
+.drop-zone.pdf-loaded {
+  cursor: default;
+}
+
+.drop-zone.pdf-loaded:hover {
+  border-color: var(--border-color);
+  background-color: rgba(100, 141, 229, 0.1);
+  transform: none;
+  box-shadow: none;
+}
+
+/* Also disable drag-over effect when PDF is loaded */
+.drop-zone.pdf-loaded.drag-over {
+  border-color: var(--border-color);
+  background-color: rgba(100, 141, 229, 0.1);
+  transform: none;
+  box-shadow: none;
+}
+
 .drop-message {
   text-align: center;
   color: var(--text-secondary);

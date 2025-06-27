@@ -151,20 +151,20 @@ function App() {
       <p>Drag and drop a PDF file or click to browse</p>
       
       <div 
-        className={`drop-zone ${isDragOver ? 'drag-over' : ''}`}
+        className={`drop-zone ${isDragOver ? 'drag-over' : ''} ${pdfFile ? 'pdf-loaded' : ''}`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        onClick={() => document.getElementById('file-input').click()}
+        onClick={() => !pdfFile && document.getElementById('file-input').click()}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
+          if (!pdfFile && (e.key === 'Enter' || e.key === ' ')) {
             e.preventDefault();
             document.getElementById('file-input').click();
           }
         }}
         role="button"
-        tabIndex={0}
-        aria-label="Drop PDF file here or click to browse"
+        tabIndex={pdfFile ? -1 : 0}
+        aria-label={pdfFile ? "PDF viewer" : "Drop PDF file here or click to browse"}
       >
         <input
           id="file-input"
