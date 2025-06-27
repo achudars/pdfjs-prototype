@@ -1,3 +1,6 @@
+/* Import JetBrains Mono font */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
 /* Prevent FOUC and ensure smooth loading */
 * {
   box-sizing: border-box;
@@ -26,7 +29,7 @@ html {
   --hover-color: var(--color-tertiary);
   --accent-color: var(--color-accent);
 
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'JetBrains Mono', 'Courier New', Consolas, Monaco, monospace;
   line-height: 1.5;
   font-weight: 400;
 
