@@ -16,6 +16,10 @@ A modern React-based PDF and image viewer built with Vite, react-pdf, and PDF.js
 
 ![Previewing an image](p3.jpg)
 
+### Files in Local Storage
+
+![Files in Local Storage](p4.jpg)
+
 ## Features
 
 - 🎯 **Drag & Drop Upload** - Simply drag PDF files or images onto the interface
