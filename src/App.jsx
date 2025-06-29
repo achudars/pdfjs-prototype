@@ -207,21 +207,17 @@ function App() {
       <h1>PDF & Image Viewer</h1>
       <p>Drag and drop a PDF file or image, or click to browse</p>
       
-      <div 
+      <button
+        type="button"
         className={`drop-zone ${isDragOver ? 'drag-over' : ''} ${currentFile ? 'pdf-loaded' : ''}`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onClick={() => !currentFile && document.getElementById('file-input').click()}
-        onKeyDown={(e) => {
-          if (!currentFile && (e.key === 'Enter' || e.key === ' ')) {
-            e.preventDefault();
-            document.getElementById('file-input').click();
-          }
-        }}
-        role="button"
-        tabIndex={currentFile ? -1 : 0}
         aria-label={currentFile ? "File viewer" : "Drop PDF or image file here or click to browse"}
+        tabIndex={currentFile ? -1 : 0}
+        style={{ width: '100%', background: 'none', border: 'none', padding: 0, textAlign: 'inherit' }}
+        disabled={!!currentFile}
       >
         <input
           id="file-input"
@@ -386,7 +382,7 @@ function App() {
                 </div>
           </div>
         )}
-      </div>
+      </button>
     </div>
   )
 }
