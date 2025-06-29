@@ -247,53 +247,57 @@ function App() {
     }
   }, [storedFiles])
 
+  // Helper function to handle image load
+  const handleImageLoad = async (img, file, url, resolve, reject) => {
+    try {
+      const metadata = {
+        fileName: file.name,
+        fileSize: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+        fileType: file.type,
+        dimensions: `${img.width} × ${img.height} pixels`,
+        width: img.width,
+        height: img.height,
+        aspectRatio: (img.width / img.height).toFixed(2),
+        lastModified: file.lastModified ? new Date(file.lastModified).toLocaleString() : 'Unknown'
+      }
+
+      setFileMetadata(metadata)
+      console.log('Image Metadata:', metadata)
+      URL.revokeObjectURL(url)
+
+      // Save to localStorage if this is a new file upload
+      const isAlreadyStored = storedFiles.some(stored => stored.name === file.name && stored.size === file.size)
+      if (!isAlreadyStored) {
+        try {
+          await saveFileToStorage(file, 'image', metadata)
+        } catch (error) {
+          console.warn('Failed to save image to storage:', error)
+        }
+      }
+
+      resolve(metadata)
+    } catch (error) {
+      console.error('Error processing image metadata:', error)
+      URL.revokeObjectURL(url)
+      reject(error)
+    }
+  }
+
   const extractImageMetadata = async (file) => {
     try {
       const img = new Image()
       const url = URL.createObjectURL(file)
-      
-      return new Promise((resolve, reject) => {
-        img.onload = async () => {
-          try {
-            const metadata = {
-              fileName: file.name,
-              fileSize: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
-              fileType: file.type,
-              dimensions: `${img.width} × ${img.height} pixels`,
-              width: img.width,
-              height: img.height,
-              aspectRatio: (img.width / img.height).toFixed(2),
-              lastModified: file.lastModified ? new Date(file.lastModified).toLocaleString() : 'Unknown'
-            }
-            
-            setFileMetadata(metadata)
-            console.log('Image Metadata:', metadata)
-            URL.revokeObjectURL(url)
 
-            // Save to localStorage if this is a new file upload
-            if (!storedFiles.some(stored => stored.name === file.name && stored.size === file.size)) {
-              try {
-                await saveFileToStorage(file, 'image', metadata)
-              } catch (error) {
-                console.warn('Failed to save image to storage:', error)
-              }
-            }
-            
-            resolve(metadata)
-          } catch (error) {
-            console.error('Error processing image metadata:', error)
-            URL.revokeObjectURL(url)
-            reject(error)
-          }
-        }
-        
+      return new Promise((resolve, reject) => {
+        img.onload = () => handleImageLoad(img, file, url, resolve, reject)
+
         img.onerror = () => {
           console.error('Error loading image for metadata extraction')
           setFileMetadata(null)
           URL.revokeObjectURL(url)
           reject(new Error('Failed to load image'))
         }
-        
+
         img.src = url
       })
     } catch (error) {
