@@ -18,7 +18,7 @@ A modern React-based PDF and image viewer built with Vite, react-pdf, and PDF.js
 
 ### Files in Local Storage
 
-![Files in Local Storage](p4.jpg)
+![Files in Local Storage](p4.png)
 
 ## Features
 
