@@ -405,7 +405,7 @@ function App() {
           {showStoredFiles && (
             <div className="stored-files-list">
               {storedFiles
-                .sort((a, b) => new Date(b.lastOpened) - new Date(a.lastOpened))
+                .toSorted((a, b) => new Date(b.lastOpened) - new Date(a.lastOpened))
                 .map((file) => (
                 <div key={file.id} className="stored-file-item">
                   <div className="file-info">
