@@ -14,7 +14,7 @@
     "postinstall": "npx copyfiles -f node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/"
   },
   "dependencies": {
-    "pdfjs-dist": "^5.3.31",
+    "pdfjs-dist": "^5.3.93",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-pdf": "^10.0.1"
