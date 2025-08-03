@@ -7,6 +7,7 @@ import 'react-pdf/dist/Page/TextLayer.css'
 import FileUploader from './components/FileUploader'
 import FileViewer from './components/FileViewer'
 import StoredFilesList from './components/StoredFilesList'
+import PublicFilesTable from './components/PublicFilesTable'
 
 // Utilities
 import { 
@@ -227,6 +228,9 @@ function App() {
           onCloseFile={resetAppState}
         />
       )}
+
+      {/* Public Files Table */}
+      <PublicFilesTable onLoadFile={handleFileSelect} />
     </div>
   )
 }

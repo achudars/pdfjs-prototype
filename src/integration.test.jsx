@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App.jsx'
 
@@ -127,10 +127,15 @@ describe('Integration Tests - Real Test Files', () => {
         expect(screen.getByText(field)).toBeInTheDocument()
       })
 
-      // Verify specific metadata values
-      expect(screen.getByText('2025_05_25_10_03_IMG_0949.JPG')).toBeInTheDocument()
-      expect(screen.getByText('image/jpeg')).toBeInTheDocument()
-      expect(screen.getByText('4.20 MB')).toBeInTheDocument()
+      // Verify specific metadata values in the metadata section only
+      const metadataSection = screen.getByText('Image Information').closest('.pdf-metadata')
+      expect(metadataSection).toBeInTheDocument()
+      
+      // Use within() to scope to metadata section only
+      const { getByText: getByTextInMetadata } = within(metadataSection)
+      expect(getByTextInMetadata('2025_05_25_10_03_IMG_0949.JPG')).toBeInTheDocument()
+      expect(getByTextInMetadata('image/jpeg')).toBeInTheDocument()
+      expect(getByTextInMetadata('4.20 MB')).toBeInTheDocument()
 
       // Verify image element is rendered with correct attributes
       const imageElement = screen.getByAltText('Preview')

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App.jsx'
 
@@ -195,12 +195,17 @@ describe('PDF & Image Viewer App', () => {
         expect(screen.getByText(label)).toBeInTheDocument()
       })
 
-      // Check specific metadata values
-      expect(screen.getByText('2025_05_25_10_03_IMG_0949.JPG')).toBeInTheDocument()
-      expect(screen.getByText('image/jpeg')).toBeInTheDocument()
-      expect(screen.getByText('1920 × 1080 pixels')).toBeInTheDocument()
-      expect(screen.getByText('1.78:1')).toBeInTheDocument() // aspect ratio
-      expect(screen.getByText('3.20 MB')).toBeInTheDocument() // file size
+      // Check specific metadata values in the metadata section
+      const metadataSection = screen.getByText('Image Information').closest('.pdf-metadata')
+      expect(metadataSection).toBeInTheDocument()
+      
+      // Use within() to scope to metadata section only
+      const { getByText: getByTextInMetadata } = within(metadataSection)
+      expect(getByTextInMetadata('2025_05_25_10_03_IMG_0949.JPG')).toBeInTheDocument()
+      expect(getByTextInMetadata('image/jpeg')).toBeInTheDocument()
+      expect(getByTextInMetadata('1920 × 1080 pixels')).toBeInTheDocument()
+      expect(getByTextInMetadata('1.78:1')).toBeInTheDocument() // aspect ratio
+      expect(getByTextInMetadata('3.20 MB')).toBeInTheDocument() // file size
     })
 
     it('handles image close functionality', async () => {

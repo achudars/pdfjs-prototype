@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom'
+import { vi } from 'vitest'
 
 // Mock URL.createObjectURL for tests
 global.URL.createObjectURL = vi.fn(() => 'mock-object-url')
