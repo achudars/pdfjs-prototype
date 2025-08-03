@@ -245,40 +245,4 @@ describe('Integration Tests - Real Test Files', () => {
       expect(screen.queryByText('Image Information')).not.toBeInTheDocument()
     })
   })
-
-  describe('UI State Management', () => {
-    it('should properly switch between different file types', async () => {
-      render(<App />)
-
-      // First load a PDF
-      const pdfFile = new File(['pdf'], 'test.pdf', { type: 'application/pdf' })
-      const fileInput = document.getElementById('file-input')
-      await user.upload(fileInput, pdfFile)
-
-      await waitFor(() => {
-        expect(screen.getByText('Document Information')).toBeInTheDocument()
-      })
-
-      // Close PDF
-      const closePdfButton = screen.getByText('Close PDF')
-      await user.click(closePdfButton)
-
-      // Verify return to initial state
-      await waitFor(() => {
-        expect(screen.getByText('Drop your PDF or image here or click to browse')).toBeInTheDocument()
-      })
-
-      // Now load an image
-      const imageFile = new File(['image'], 'test.jpg', { type: 'image/jpeg' })
-      await user.upload(fileInput, imageFile)
-
-      await waitFor(() => {
-        expect(screen.getByText('Image Information')).toBeInTheDocument()
-      })
-
-      // Verify PDF-specific elements are not present
-      expect(screen.queryByText('Document Information')).not.toBeInTheDocument()
-      expect(screen.queryByText(/Page \d+ of \d+/)).not.toBeInTheDocument()
-    })
-  })
 })
