@@ -16,5 +16,13 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: ["./src/test/setup.jsx"],
+    reporters: [
+      [
+        "default",
+        {
+          summary: false,
+        },
+      ],
+    ],
   },
 });
