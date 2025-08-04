@@ -16,8 +16,8 @@ Always test PDF upload/viewing after any dependency changes.
 
 ## How it works
 
-1. The PDF.js worker file is copied from `node_modules/pdfjs-dist/build/pdf.worker.min.mjs` to `public/pdf.worker.min.mjs`
-2. The worker is referenced locally in App.jsx: `pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'`
+1. The PDF.js worker file is copied from `node_modules/pdfjs-dist/build/pdf.worker.min.mjs` to `public/pdf.worker.min.js` (CommonJS compatible)
+2. The worker is referenced locally in App.jsx: `pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js'`
 3. The `postinstall` script automatically copies the worker file when dependencies are installed
 4. **Version matching**: `pdfjs-dist` is pinned to exact version `4.8.69` to match `react-pdf@9.x` dependency
 
@@ -33,7 +33,7 @@ If you need to manually copy the worker file:
 
 ```bash
 npm install copyfiles
-npx copyfiles -f node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/
+npx copyfiles -f node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/ && cp public/pdf.worker.min.mjs public/pdf.worker.min.js
 ```
 
 ## Verification
@@ -42,7 +42,7 @@ The app includes a check to verify the worker file is accessible:
 
 - Check browser console for "✅ PDF worker file is accessible" message
 - Check console for matching PDF.js version (should be 4.8.69)
-- Or manually visit: http://localhost:5175/pdf.worker.min.mjs
+- Or manually visit: http://localhost:5175/pdf.worker.min.js
 
 ## Troubleshooting
 

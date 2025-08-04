@@ -67,7 +67,7 @@ vi.mock('react-pdf', () => ({
   ),
   pdfjs: {
     GlobalWorkerOptions: {
-      workerSrc: '/pdf.worker.min.mjs'
+      workerSrc: '/pdf.worker.min.js'
     },
     version: '4.8.69'
   }

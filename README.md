@@ -171,7 +171,8 @@ See [TEST_RESULTS.md](TEST_RESULTS.md) for detailed test analysis.
 │   ├── favicon.svg           # Blue square favicon (main)
 │   ├── favicon-16x16.svg     # 16x16 favicon variant
 │   ├── favicon-32x32.svg     # 32x32 favicon variant
-│   └── pdf.worker.min.mjs    # PDF.js worker (local copy)
+│   ├── pdf.worker.min.mjs    # PDF.js worker (original ESM)
+│   └── pdf.worker.min.js     # PDF.js worker (CommonJS compatible)
 ├── src/
 │   ├── App.jsx               # Main application component
 │   ├── main.jsx              # React entry point
@@ -187,7 +188,7 @@ See [TEST_RESULTS.md](TEST_RESULTS.md) for detailed test analysis.
 
 This project uses a local copy of the PDF.js worker to avoid CORS issues:
 
-- Worker file: `public/pdf.worker.min.mjs`
+- Worker file: `public/pdf.worker.min.js` (CommonJS compatible)
 - Auto-copied via `postinstall` script
 - Version-matched with pdfjs-dist dependency
 
@@ -243,7 +244,7 @@ Custom CSS variables in `style.css`:
 ### If PDF Worker Breaks After Upgrade
 
 1. Check console for worker-related errors
-2. Verify worker file exists: `public/pdf.worker.min.mjs`
+2. Verify worker file exists: `public/pdf.worker.min.js`
 3. Ensure versions match: `npm list react-pdf pdfjs-dist`
 4. Reinstall with correct versions: `npm install`
 5. Consider reverting the upgrade if issues persist
@@ -255,7 +256,7 @@ See [WORKER_SETUP.md](WORKER_SETUP.md) for detailed worker configuration.
 ### PDF Won't Load
 
 1. Check browser console for errors
-2. Verify worker file is accessible: `/pdf.worker.min.mjs`
+2. Verify worker file is accessible: `/pdf.worker.min.js`
 3. Ensure PDF file is valid and not corrupted
 4. Check that API and Worker versions match
 
@@ -273,7 +274,7 @@ npm install
 Manually copy the worker file:
 
 ```bash
-npx copyfiles -f node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/
+npx copyfiles -f node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/ && cp public/pdf.worker.min.mjs public/pdf.worker.min.js
 ```
 
 ## Recent Updates (v0.1.0)

@@ -1,6 +1,6 @@
 // File processing utilities for metadata extraction
 
-export const extractImageMetadata = async (file) => {
+const extractImageMetadata = async (file) => {
   try {
     const img = new Image();
     const url = URL.createObjectURL(file);
@@ -45,7 +45,7 @@ export const extractImageMetadata = async (file) => {
   }
 };
 
-export const extractPdfMetadata = async (pdf, currentFile) => {
+const extractPdfMetadata = async (pdf, currentFile) => {
   try {
     const metadata = await pdf.getMetadata();
     const info = metadata.info || {};
@@ -79,7 +79,7 @@ export const extractPdfMetadata = async (pdf, currentFile) => {
   }
 };
 
-export const validateFileType = (file) => {
+const validateFileType = (file) => {
   if (file.type === "application/pdf") {
     return { isValid: true, type: "pdf" };
   } else if (file.type.startsWith("image/")) {
@@ -91,4 +91,10 @@ export const validateFileType = (file) => {
       error: "Please select a valid PDF or image file.",
     };
   }
+};
+
+module.exports = {
+  extractImageMetadata,
+  extractPdfMetadata,
+  validateFileType,
 };

@@ -1,6 +1,6 @@
 // Local Storage utility functions for file management
 
-export const saveFileToStorage = async (file, fileType, metadata = null) => {
+const saveFileToStorage = async (file, fileType, metadata = null) => {
   try {
     const reader = new FileReader();
 
@@ -47,7 +47,7 @@ export const saveFileToStorage = async (file, fileType, metadata = null) => {
   }
 };
 
-export const loadStoredFiles = () => {
+const loadStoredFiles = () => {
   try {
     const stored = localStorage.getItem("uploadedFiles");
     if (stored) {
@@ -62,7 +62,7 @@ export const loadStoredFiles = () => {
   }
 };
 
-export const loadFileFromStorage = (storedFile) => {
+const loadFileFromStorage = (storedFile) => {
   try {
     // Convert base64 back to File object
     const byteCharacters = atob(storedFile.data.split(",")[1]);
@@ -87,7 +87,7 @@ export const loadFileFromStorage = (storedFile) => {
   }
 };
 
-export const updateLastOpened = (fileId) => {
+const updateLastOpened = (fileId) => {
   try {
     const existingFiles = JSON.parse(
       localStorage.getItem("uploadedFiles") || "[]"
@@ -105,7 +105,7 @@ export const updateLastOpened = (fileId) => {
   }
 };
 
-export const deleteFileFromStorage = (fileId) => {
+const deleteFileFromStorage = (fileId) => {
   try {
     const existingFiles = JSON.parse(
       localStorage.getItem("uploadedFiles") || "[]"
@@ -120,7 +120,7 @@ export const deleteFileFromStorage = (fileId) => {
   }
 };
 
-export const clearAllStoredFiles = () => {
+const clearAllStoredFiles = () => {
   try {
     localStorage.removeItem("uploadedFiles");
     console.log("🗑️ All files cleared from storage");
@@ -129,4 +129,13 @@ export const clearAllStoredFiles = () => {
     console.error("❌ Error clearing stored files:", error);
     return [];
   }
+};
+
+module.exports = {
+  saveFileToStorage,
+  loadStoredFiles,
+  loadFileFromStorage,
+  updateLastOpened,
+  deleteFileFromStorage,
+  clearAllStoredFiles,
 };

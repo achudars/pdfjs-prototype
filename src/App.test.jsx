@@ -317,7 +317,7 @@ describe('PDF & Image Viewer App', () => {
 
       // Wait a moment for useEffect to run
       await waitFor(() => {
-        expect(global.fetch).toHaveBeenCalledWith('/pdf.worker.min.mjs', { method: 'HEAD' })
+        expect(global.fetch).toHaveBeenCalledWith('/pdf.worker.min.js', { method: 'HEAD' })
       })
     })
   })

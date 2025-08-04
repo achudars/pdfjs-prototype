@@ -54,7 +54,7 @@ npm: 9.4.1
   "test:run": "vitest run",
   "test:ui": "vitest --ui",
   "test:coverage": "vitest --coverage",
-  "postinstall": "copyfiles -f node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/"
+  "postinstall": "copyfiles -f node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/ && cp public/pdf.worker.min.mjs public/pdf.worker.min.js"
 }
 ```
 

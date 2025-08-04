@@ -10,6 +10,7 @@ npm list react-pdf pdfjs-dist
 
 echo ""
 echo "Checking if worker file is in sync:"
+ls -la public/pdf.worker.min.js
 ls -la public/pdf.worker.min.mjs
 ls -la node_modules/pdfjs-dist/build/pdf.worker.min.mjs
 
@@ -19,7 +20,7 @@ curl -I http://localhost:5176/ 2>/dev/null | head -1 || echo "Server not accessi
 
 echo ""
 echo "Testing if worker file is accessible:"
-curl -I http://localhost:5176/pdf.worker.min.mjs 2>/dev/null | head -1 || echo "Worker not accessible"
+curl -I http://localhost:5176/pdf.worker.min.js 2>/dev/null | head -1 || echo "Worker not accessible"
 
 echo ""
 echo "Test completed!"

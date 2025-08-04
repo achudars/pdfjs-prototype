@@ -10,22 +10,22 @@ import StoredFilesList from './components/StoredFilesList'
 import PublicFilesTable from './components/PublicFilesTable'
 
 // Utilities
-import { 
+const { 
   saveFileToStorage, 
   loadStoredFiles, 
   loadFileFromStorage, 
   updateLastOpened, 
   deleteFileFromStorage, 
   clearAllStoredFiles 
-} from './utils/localStorage'
-import { 
+} = require('./utils/localStorage')
+const { 
   extractImageMetadata, 
   extractPdfMetadata, 
   validateFileType 
-} from './utils/fileProcessing'
+} = require('./utils/fileProcessing')
 
 // Set up the worker for react-pdf v10.x with local worker file
-pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js'
 
 function App() {
   // State management
@@ -45,7 +45,7 @@ function App() {
     console.log('Worker source:', pdfjs.GlobalWorkerOptions.workerSrc)
     
     // Test if worker is accessible
-    fetch('/pdf.worker.min.mjs', { method: 'HEAD' })
+    fetch('/pdf.worker.min.js', { method: 'HEAD' })
       .then(response => {
         if (response.ok) {
           console.log('✅ PDF worker file is accessible')
