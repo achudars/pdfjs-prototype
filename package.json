@@ -13,9 +13,9 @@
     "postinstall": "npx copyfiles -f node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/ && cp public/pdf.worker.min.mjs public/pdf.worker.min.js"
   },
   "dependencies": {
-    "pdfjs-dist": "^5.7.284",
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6",
+    "pdfjs-dist": "^6.0.227",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "react-pdf": "^10.4.1"
   },
   "devDependencies": {
@@ -23,12 +23,12 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
-    "@types/react": "^19.2.15",
+    "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.2",
     "copyfiles": "^2.4.1",
     "jsdom": "^29.1.1",
-    "vite": "^8.0.14",
-    "vitest": "^4.1.7"
+    "vite": "^8.0.16",
+    "vitest": "^4.1.9"
   }
 }
