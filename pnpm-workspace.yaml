@@ -5,6 +5,8 @@ allowBuilds:
   '@img/sharp-win32-x64': true
   sharp: true
   unrs-resolver: true
+overrides:
+  pdfjs-dist: 6.4.299
 minimumReleaseAgeExclude:
   - '@vitest/expect@4.1.9 || 4.1.11'
   - '@vitest/mocker@4.1.9 || 4.1.11'
